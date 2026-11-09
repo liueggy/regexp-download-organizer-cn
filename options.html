@@ -2,193 +2,100 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>RegExp 下载整理器</title>
-
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-
-    <style>
-        .tooltip-inner {
-            max-width: 400px!important;
-        }
-
-        .form-control::-moz-placeholder {
-            color: #aaa !important;
-            opacity: 1;
-        }
-
-        .form-control:-ms-input-placeholder {
-            color: #aaa !important;
-        }
-
-        .form-control::-webkit-input-placeholder {
-            color: #aaa !important;
-        }
-
-        .title-container {
-            /*white-space: nowrap;*/
-            /*overflow: hidden;*/
-            /*text-overflow: ellipsis;*/
-            padding-top: 1px;
-            padding-bottom: 1px;
-            cursor: pointer;
-        }
-
-        .title-container span.glyphicon {
-            padding-left: 1em;
-            padding-right: 0.4em;
-        }
-        .title-container span.label {
-            margin-right: 0.3em;
-        }
-
-        .label-mime {
-            background-color: #428bca;
-        }
-        .label-tabUrl {
-            background-color: #428bca;
-        }
-        .label-url {
-            background-color: #428bca;
-        }
-        .label-referrer {
-            background-color: #428bca;
-        }
-        .label-filename {
-            background-color: #428bca;
-        }
-        .label-disabled {
-            background-color: #aaa;
-        }
-
-        input:not([type='file']),textarea.form-control {
-            font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
-        }
-
-        .form-control[readonly] {
-            cursor: text!important;
-        }
-
-        .tab-content {
-            border-left: 1px solid #ddd;
-            border-right: 1px solid #ddd;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 10px;
-            padding: 10px;
-        }
-
-        #main-toolbar {
-            margin-bottom: 10px;
-        }
-    </style>
+    <title>RegExp 下载整理器 — 下载规则</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="container">
-    <h1 class="page-header">下载规则
-        <small></small>
-    </h1>
+<div class="page">
+    <header class="page-header">
+        <span class="logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+        </span>
+        <div class="page-header-text">
+            <h1>下载规则</h1>
+            <p class="muted">按正则规则把下载文件自动归类到子文件夹 · <span id="version">RegExp 下载整理器</span></p>
+        </div>
+    </header>
 
-    <div class="row">
-        <div class="col-sm-8">
-            <div id="main-toolbar" class="btn-toolbar">
-                <div class="btn-group pull-right">
-                    <button id="add-rule-btn" type="button" class="btn btn-success">
-                        <span class="glyphicon glyphicon-plus"></span> 新建规则
-                    </button>
-                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a id="add-rule-from-text-btn" data-toggle="modal" data-target="#addRuleFromTextModal" href="#">从文本新建规则...</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div id="disabled-rules-alert" class="alert alert-warning collapse">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                注意：部分规则已停用，启用前不会生效。勾选规则右侧的复选框即可启用。
-            </div>
-            <div id="taburl-permission-alert" class="alert alert-warning collapse">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>需要 Tab URL 权限。</strong> 部分规则使用了 Tab URL 匹配，但扩展尚无访问标签页与历史记录的权限，授权前这些规则不会生效。
-                <br><br>
-                <button id="request-tabs-permission-btn" type="button" class="btn btn-primary btn-sm">授权 Tab URL 权限</button>
-            </div>
-            <div class="panel-group" id="rules-container">
+    <div class="layout">
+        <main class="main-col">
 
-            </div>
-
-            <!--
-            <form class="form-horizontal" role="form">
-                <div class="form-group form-group-sm">
-                    <label class="control-label col-sm-9">Default name conflict action:</label>
-                    <div class="col-sm-3 has-feedback">
-                        <select id='default-action-select' class="form-control">
-                            <option value="uniquify">自动重命名</option>
-                            <option value="overwrite">覆盖</option>
-                            <option value="prompt">Prompt</option>
-                        </select>
+            <div class="toolbar">
+                <div class="menu-anchor" id="add-rule-menu-anchor">
+                    <button id="add-rule-btn" class="btn btn-primary" type="button">＋ 新建规则</button>
+                    <button id="add-rule-menu-btn" class="btn btn-primary btn-caret" type="button" aria-haspopup="true" aria-expanded="false" title="更多模板">▾</button>
+                    <div id="add-rule-menu" class="menu" hidden>
+                        <div class="menu-title">从模板新建规则</div>
+                        <button class="menu-item" type="button" data-template="blank">空白规则</button>
+                        <button class="menu-item" type="button" data-template="ext">按扩展名分类</button>
+                        <button class="menu-item" type="button" data-template="mime">按 MIME 类型分类</button>
+                        <button class="menu-item" type="button" data-template="site">按网站 URL 分类</button>
+                        <div class="menu-sep" role="separator"></div>
+                        <button class="menu-item" type="button" id="add-rule-from-text-btn">从文本新建规则…</button>
                     </div>
                 </div>
-            </form> -->
-            <div id="secondary-toolbar" class="btn-toolbar">
-                <div class="btn-group">
-                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                        <span class="glyphicon glyphicon-export"></span>
-                        导出规则
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a id="export-rules-btn" href="#">保存到文件</a></li>
-                        <li><a id="sync-rules-to-cloud-btn" href="#">同步到云端</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group">
-                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                        <span class="glyphicon glyphicon-import"></span>
-                        导入规则
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a id="import-rules-btn" href="#" data-toggle="modal" data-target="#importRulesFromTextModal">从文件加载...</a></li>
-                        <li><a id="sync-rules-from-cloud-btn" href="#">从云端同步</a></li>
-                    </ul>
-                </div>
-                <button id="reset-rules-btn" type="button" class="btn btn-danger pull-right">重置规则...</button>
+
+                <div class="toolbar-spacer"></div>
+
+                <button id="export-rules-btn" class="btn" type="button" title="把全部规则保存为 JSON 文件">导出文件</button>
+                <button id="import-rules-btn" class="btn" type="button" title="从文件或粘贴文本导入规则（可选替换现有）">导入规则…</button>
+                <button id="sync-rules-to-cloud-btn" class="btn" type="button" title="备份规则到 chrome.storage.sync（随 Chrome 账号在各设备间同步）">同步到云端</button>
+                <button id="sync-rules-from-cloud-btn" class="btn" type="button" title="取回之前备份的云端规则（将覆盖现有规则）">从云端同步</button>
+                <button id="reset-rules-btn" class="btn btn-danger-ghost" type="button">重置规则…</button>
             </div>
-        </div>
-        <div class="col-sm-4">
-            <ul id="tab-links" class="nav nav-tabs" role="tablist">
-                <li class="active"><a href="#tab-help" role="tab" data-toggle="tab">帮助</a></li>
-                <li><a href="#tab-changelog" role="tab" data-toggle="tab">更新日志 <span id="newBadge" class="badge" style="display:none;">New!</span></a></li>
-                <li><a href="#tab-about" role="tab" data-toggle="tab">关于</a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane active" id="tab-help">
+
+            <div id="disabled-rules-alert" class="alert alert-warning" hidden>
+                注意：部分规则已停用，启用前不会生效。点规则右侧的开关即可启用。
+            </div>
+
+            <div id="taburl-permission-alert" class="alert alert-warning" hidden>
+                <strong>需要 Tab URL 权限。</strong> 部分规则使用了 Tab URL 匹配，但扩展尚无访问标签页与历史记录的权限，授权前这些规则不会生效。
+                <div class="alert-actions">
+                    <button id="request-tabs-permission-btn" class="btn btn-sm btn-primary" type="button">授权 Tab URL 权限</button>
+                </div>
+            </div>
+
+            <section id="rules-container" class="rules-list"></section>
+
+            <section class="card cloud-card">
+                <h2>云端规则</h2>
+                <p class="card-sub muted">gist 内容须是规则 JSON 数组，粘贴其 raw 链接（文件页面右上角 Raw 按钮对应的网址）</p>
+                <div class="cloud-row">
+                    <input id="cloud-url-input" class="input" type="url" spellcheck="false"
+                           placeholder="粘贴 gist raw 链接或任意返回规则 JSON 数组的 URL">
+                    <button id="load-cloud-rules-btn" class="btn btn-primary" type="button">加载</button>
+                </div>
+                <div id="cloud-status" class="cloud-status" hidden></div>
+            </section>
+        </main>
+
+        <aside class="side-col">
+            <nav class="tabs" id="side-tabs">
+                <button class="tab active" type="button" data-tab="help">帮助</button>
+                <button class="tab" type="button" data-tab="changelog">更新日志<span id="newBadge" class="dot-badge" hidden>NEW</span></button>
+                <button class="tab" type="button" data-tab="about">关于</button>
+            </nav>
+
+            <section class="card tab-panel active" id="tab-help">
+                <article>
                     <h4>下载规则</h4>
-
-                    <p>每次开始下载文件时，规则会逐条应用。每
-                        每条规则由若干匹配条件和目标路径模式组成。
-                        匹配条件其实是一组<i>正则表达式</i>，
-                        分别作用于下载项的<b>文件类型</b>、<b>URL</b>、
-                        <b>来源页 URL</b>和<b>文件名</b>。
-                        如果某条规则的所有非空条件都命中，
+                    <p>每次开始下载文件时，规则会逐条应用。每条规则由若干匹配条件和目标路径模式组成。
+                        匹配条件其实是一组<i>正则表达式</i>，分别作用于下载项的<b>文件类型</b>、<b>URL</b>、
+                        <b>来源页 URL</b>和<b>文件名</b>。如果某条规则的所有非空条件都命中，
                         文件就按该规则的目标路径模式重命名保存，其余规则跳过。</p>
+                    <p>所有正则表达式均不区分大小写。</p>
+                </article>
 
-                    <p>
-                        所有正则表达式均不区分大小写。
-                    </p>
-
+                <article>
                     <h4>匹配条件</h4>
+                    <p>匹配条件里可以使用任何 <i>正则表达式</i> 语法（包括<i>捕获组</i>）。</p>
+                </article>
 
-                    <p>匹配条件里可以使用任何 <i>正则表达式</i> 语法（包括<i>捕获组</i>）。
-                    </p>
-
+                <article>
                     <h4>MIME 类型</h4>
-                    MIME 类型是描述文件格式的字符串。最常见的一些 MIME 类型如下：
-                    <dl class="dl-horizontal">
+                    <p>MIME 类型是描述文件格式的字符串。最常见的一些 MIME 类型如下：</p>
+                    <dl class="kv-list">
                         <dt>application/pdf</dt>
                         <dd>PDF 文档</dd>
                         <dt>application/zip</dt>
@@ -208,130 +115,131 @@
                         <dt>video/x-msvideo</dt>
                         <dd>AVI 视频</dd>
                     </dl>
+                    <p>此外还有更详细的 <a href="http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types" target="_blank" rel="noopener">常见 MIME 类型完整列表</a>可供参考。</p>
+                    <p>别忘了可以用通配符匹配一组文件类型（如 <code>image/.*</code> 或 <code>audio/.*</code>）。</p>
+                </article>
 
-                    <p>此外还有更详细的 <a href="http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types"
-                                                        target="_blank">常见 MIME 类型完整列表</a>可供参考。</p>
-                    <p>别忘了可以用通配符匹配一组文件类型（如 <code>image/.*</code> 或 <code>audio/.*</code>）</p>
-
+                <article>
                     <h4>目标路径模式</h4>
-
                     <p>这部分定义下载文件的最终存放位置。</p>
-
-                    <p>可以用占位符引用匹配条件的捕获组，
-                        常用书写格式为： — 格式为 <code>${matcher:组序号}</code>，其中
-                        <code>matcher</code> <code>matcher</code> 是匹配条件的字段名，<code>num</code> 是捕获组序号
-                        （从 1 开始）。例：占位符 <code>${referrer:1}</code> 会被替换为
-                        <b>来源页 URL</b> 条件中第 1 个捕获组的内容。<br/>
+                    <p>可以用占位符引用匹配条件的捕获组，常用书写格式为 <code>${matcher:组序号}</code>，其中
+                        <code>matcher</code> 是匹配条件的字段名，序号是捕获组编号（从 1 开始）。
+                        例：占位符 <code>${referrer:1}</code> 会被替换为 <b>来源页 URL</b> 条件中第 1 个捕获组的内容。<br>
                         不带序号的占位符（如 <code>${filename}</code>）则取整个字段。</p>
+                    <p>可用占位符有：<code>mime</code>、<code>url</code>、<code>finalUrl</code>、<code>referrer</code>、<code>filename</code>。</p>
+                    <p><b>Chrome</b> 会限定最终路径必须位于默认下载文件夹之内，可用符号链接绕过该限制。</p>
+                </article>
 
-                    <p>可用占位符有：<code>mime</code>、<code>url</code>、<code>finalUrl</code>、<code>referrer</code>、<code>filename</code>。
-                    </p>
-
-                    <p><b>Chrome</b> 会限定最终路径必须位于默认下载文件夹之内，
-                        可用符号链接绕过该限制。
-                    </p>
-
+                <article>
                     <h4>同名冲突处理</h4>
+                    <p>文件重名时可选择三种处理方式：</p>
+                    <ol>
+                        <li><strong>自动重命名</strong>：若文件已存在，会在文件名后追加 "(1)"。如已存在 "MyImage.jpg"，将保存为 "MyImage (1).jpg"、"MyImage (2).jpg"，以此类推。</li>
+                        <li><strong>覆盖</strong>：直接覆盖已存在的同名文件。</li>
+                        <li><strong>询问</strong>：弹出对话框逐个确认。</li>
+                    </ol>
+                </article>
 
-                    <p>文件重名时可选择三种处理方式：
-                        <ol>
-                            <li>
-                                <strong>自动重命名</strong>：若文件已存在，会在文件名后追加 "(1)"。
-                                如已存在 "MyImage.jpg"，将保存为 "MyImage (1).jpg"、"MyImage (2).jpg"，
-                                以此类推。
-                            </li>
-                            <li>
-                                <strong>覆盖</strong>：直接覆盖已存在的同名文件。
-                            </li>
-                            <li>
-                                <strong>询问</strong>：弹出对话框逐个确认。
-                            </li>
-                        </ol>
-                    </p>
-
+                <article>
                     <h4>正则速查</h4>
-
                     <p>
-                        <strong>"|"</strong> 表示"或"。如 <code>facebook|google</code> 可匹配
-                        同时含 <code>facebook</code> 或 <code>google</code> 的<b>任意字符串</b>。<br/>
-                        <strong>"."</strong> 是单字符通配符。如 <code>a.b</code> 能匹配
-                        <code>a-b</code>, <code>acb</code>, <code>a b</code> 等。<br/>
-                        <strong>".*"</strong> 是多字符通配符（可匹配零个字符）<br/>
-                        <strong>".+"</strong> 是多字符通配符（不能匹配空串，
-                        至少要匹配一个字符）<br/>
-                        <strong>"\"</strong> 用来转义特殊符号。如
-                        <code>www\.google\.com</code> 中的点号就不再表示通配符。<br/>
-                        捕获组：圆括号 <strong>"( )"</strong> 包围的部分即为捕获组。
-                        E.g. <code>www\.(.+)\.com</code> 会匹配各 <b>.com</b> 域名，并把去掉 <b>"www."</b> 前缀与 <b>".com"</b> 后缀的部分存入第 <b>1</b> 组。<br/>
+                        <strong>"|"</strong> 表示"或"。如 <code>facebook|google</code> 可匹配同时含 <code>facebook</code> 或 <code>google</code> 的<b>任意字符串</b>。<br>
+                        <strong>"."</strong> 是单字符通配符。如 <code>a.b</code> 能匹配 <code>a-b</code>、<code>acb</code>、<code>a b</code> 等。<br>
+                        <strong>".*"</strong> 是多字符通配符（可匹配零个字符）。<br>
+                        <strong>".+"</strong> 是多字符通配符（不能匹配空串，至少要匹配一个字符）。<br>
+                        <strong>"\"</strong> 用来转义特殊符号。如 <code>www\.google\.com</code> 中的点号就不再表示通配符。<br>
+                        捕获组：圆括号 <strong>"( )"</strong> 包围的部分即为捕获组。例：<code>www\.(.+)\.com</code> 会匹配各 <b>.com</b> 域名，并把去掉 <b>"www."</b> 前缀与 <b>".com"</b> 后缀的部分存入第 <b>1</b> 组。
                     </p>
-
                     <p>More info about regular expressions:
-                        <a href="http://en.wikipedia.org/wiki/Regular_expression" target="_blank">Wikipedia</a>,
-                        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp"
-                            target="_blank">Mozilla Developer Network</a>
+                        <a href="http://en.wikipedia.org/wiki/Regular_expression" target="_blank" rel="noopener">Wikipedia</a>、
+                        <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp" target="_blank" rel="noopener">Mozilla Developer Network</a>
                     </p>
+                </article>
 
+                <article>
                     <h4>日期占位符</h4>
-                    <p>
-                        在目标路径中加入占位符 <code>date</code>，即可按日期/时间归类。
-                        几个常用示例：
-                        <ul>
-                            <li><code>${date}</code> → <code id="date-example-date" class="date-format-example" data-value="YYYY-MM-DD">2018-11-18</code></li>
-                            <li><code>${date:YYYY}</code> → <code id="date-example-year" class="date-format-example" data-value="YYYY">2018</code></li>
-                            <li><code>${date:YYYY, MMMM}</code> → <code id="date-example-year-monthname" class="date-format-example" data-value="YYYY, MMMM">2018, November</code></li>
-                            <li><code>${date:YYYY.MM.DD}</code> → <code id="date-example-year-month-day" class="date-format-example" data-value="YYYY.MM.DD">2018.11.18</code></li>
-                            <li><code>${date:YYYY.MM.DD_HH-mm-ss}</code> → <code id="date-example-date-with-time" class="date-format-example" data-value="YYYY.MM.DD_HH-mm-ss">2018.11.18_16-38-08</code></li>
-                        </ul>
-                    </p>
+                    <p>在目标路径中加入占位符 <code>date</code>，即可按日期/时间归类。几个常用示例：</p>
+                    <ul>
+                        <li><code>${date}</code> → <code id="date-example-date" class="date-format-example" data-value="YYYY-MM-DD">2018-11-18</code></li>
+                        <li><code>${date:YYYY}</code> → <code id="date-example-year" class="date-format-example" data-value="YYYY">2018</code></li>
+                        <li><code>${date:YYYY, MMMM}</code> → <code id="date-example-year-monthname" class="date-format-example" data-value="YYYY, MMMM">2018, November</code></li>
+                        <li><code>${date:YYYY.MM.DD}</code> → <code id="date-example-year-month-day" class="date-format-example" data-value="YYYY.MM.DD">2018.11.18</code></li>
+                        <li><code>${date:YYYY.MM.DD_HH-mm-ss}</code> → <code id="date-example-date-with-time" class="date-format-example" data-value="YYYY.MM.DD_HH-mm-ss">2018.11.18_16-38-08</code></li>
+                    </ul>
+                    <p>日期格式详见 <a href="https://momentjs.com/docs/#/displaying/format/" target="_blank" rel="noopener">moment.js 文档</a>。</p>
+                </article>
 
-                    <p>日期格式详见 <a href="https://momentjs.com/docs/#/displaying/format/" target="_blank">moment.js documentation</a>.</p>
-
+                <article>
                     <h4>自定义文件扩展名</h4>
-                    <p>
-                        受 Chrome API 限制，无法为已知 MIME 类型指定其他扩展名。
-                        变通办法：用第三方扩展改写下载地址的响应头，
-                        把 <code>Content-Type</code> 改成生僻 MIME 类型（如 <code>application/x-unknown-mime-type</code>），
-                        之后即可在<b>目标路径</b>中写自定义扩展名。
-                    </p>
-                </div>
-                <div class="tab-pane" id="tab-changelog">
+                    <p>受 Chrome API 限制，无法为已知 MIME 类型指定其他扩展名。变通办法：用第三方扩展改写下载地址的响应头，把 <code>Content-Type</code> 改成生僻 MIME 类型（如 <code>application/x-unknown-mime-type</code>），之后即可在<b>目标路径</b>中写自定义扩展名。</p>
+                </article>
+            </section>
+
+            <section class="card tab-panel" id="tab-changelog" hidden>
+                <article>
+                    <h4>v0.6.0</h4>
+                    <ul>
+                        <li>新增：从 URL（gist raw 链接）加载规则，支持替换或合并到现有规则</li>
+                        <li>新建规则提供模板：按扩展名 / MIME 类型 / 网站 URL 分类</li>
+                        <li>选项页全新设计，支持系统深浅色，移除 jQuery / Bootstrap 依赖</li>
+                    </ul>
+                </article>
+                <article>
                     <h4>v0.5.1</h4>
                     <ul>
                         <li>Tab URL 匹配条件改为需要可选的 tabs 权限</li>
                         <li>规则用到 Tab URL 而未授权时显示警告和授权按钮</li>
                     </ul>
+                </article>
+                <article>
                     <h4>v0.5.0</h4>
                     <ul>
                         <li>支持匹配当前标签页 URL</li>
                     </ul>
+                </article>
+                <article>
                     <h4>v0.4.1</h4>
                     <ul>
                         <li>修复日期格式化的 bug</li>
                     </ul>
+                </article>
+                <article>
                     <h4>v0.4.0</h4>
                     <ul>
                         <li>迁移到 Manifest V3，满足 Chrome 扩展最新要求</li>
                     </ul>
+                </article>
+                <article>
                     <h4>v0.3.2</h4>
                     <ul>
                         <li>支持云端导入/导出规则</li>
                     </ul>
+                </article>
+                <article>
                     <h4>v0.3.1</h4>
                     <ul>
                         <li>支持设置同名冲突处理方式</li>
                     </ul>
+                </article>
+                <article>
                     <h4>v0.3</h4>
                     <ul>
                         <li>新增 <strong>最终下载 URL</strong>（全部重定向后的地址）字段及对应 <code>finalUrl</code> 占位符</li>
                     </ul>
+                </article>
+                <article>
                     <h4>v0.2.5</h4>
                     <ul>
                         <li>修正预置 referrer 规则的拼写错误（若该规则不生效请重置规则）</li>
                     </ul>
+                </article>
+                <article>
                     <h4>v0.2.4.2</h4>
                     <ul>
                         <li>修复目标路径中使用多个占位符的问题</li>
                     </ul>
+                </article>
+                <article>
                     <h4>v0.2.4</h4>
                     <ul>
                         <li>目标路径支持日期/时间格式化</li>
@@ -339,258 +247,94 @@
                         <li>规则可停用而不必删除</li>
                         <li>新增更多预置规则</li>
                     </ul>
+                </article>
+                <article>
                     <h4>v0.2.3</h4>
                     <ul>
                         <li>修复含转义 URL 的问题</li>
                     </ul>
+                </article>
+                <article>
                     <h4>v0.2.2</h4>
                     <ul>
                         <li>大量 bug 修复</li>
                         <li>规则标题样式重设计</li>
                     </ul>
+                </article>
+                <article>
                     <h4>v0.2</h4>
                     <ul>
                         <li>新增规则集的导入/导出</li>
                         <li>新增「分享规则」按钮</li>
                         <li>若干 bug 修复与界面优化</li>
                     </ul>
+                </article>
+                <article>
                     <h4>v0.1</h4>
                     <ul>
                         <li>首发版本，基础功能</li>
                     </ul>
-                </div>
-                <div class="tab-pane" id="tab-about">
-                    <h5><span style="color:#ee6c26;">♥</span> 由机器人满怀爱意地为人类而做~</h5>
+                </article>
+            </section>
+
+            <section class="card tab-panel" id="tab-about" hidden>
+                <article>
+                    <h5 class="about-love"><span class="heart">♥</span> 由机器人满怀爱意地为人类而做~</h5>
                     <p>欢迎通过 GitHub 提交问题、功能建议或参与开发</p>
                     <ul>
-                        <li><a href="https://github.com/unintended/download-organizer-chrome-extension/issues" target="_blank">问题反馈</a></li>
-                        <li><a href="https://github.com/unintended/download-organizer-chrome-extension" target="_blank">GitHub 仓库</a></li>
-                        <li><a href="https://chrome.google.com/webstore/detail/regexp-download-organizer/oamembonjndgangicfphlckkdmagpjlg" target="_blank">Chrome 商店页面</a></li>
-                        <li><a href="LICENSE" target="_blank">License</a></li>
+                        <li><a href="https://github.com/unintended/download-organizer-chrome-extension/issues" target="_blank" rel="noopener">问题反馈</a></li>
+                        <li><a href="https://github.com/unintended/download-organizer-chrome-extension" target="_blank" rel="noopener">GitHub 仓库</a></li>
+                        <li><a href="https://chromewebstore.google.com/detail/regexp-download-organizer/oamembonjndgangicfphlckkdmagpjlg" target="_blank" rel="noopener">Chrome 商店页面</a></li>
+                        <li><a href="LICENSE" target="_blank" rel="noopener">License</a></li>
                     </ul>
-                </div>
-            </div>
-        </div>
+                </article>
+            </section>
+        </aside>
     </div>
 </div>
 
-<div id="showRuleFromTextModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="showModalRuleTextLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-                </button>
-                <h4 class="modal-title" id="showModalRuleTextLabel">分享规则</h4>
-            </div>
-            <div class="modal-body">
-                <p>复制下面的文本即可把规则分享给别人。<br/>
-                    导入已分享的规则请用「从文本新建规则...」按钮</p>
-                <textarea class="form-control " rows="4" readonly></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-            </div>
-        </div>
+<dialog id="add-rule-text-dialog" class="dlg">
+    <h3>从文本新建规则</h3>
+    <p class="muted">粘贴一条规则的 JSON，例如：
+        <code>{"description":"图片","mime":"image/.*","pattern":"images/"}</code></p>
+    <div id="add-rule-text-error" class="alert alert-danger" hidden></div>
+    <textarea id="add-rule-text-textarea" class="input" rows="10" spellcheck="false"
+              placeholder='{"description": "…", "mime": "…", "pattern": "文件夹/"}'></textarea>
+    <div class="dlg-footer">
+        <button class="btn" type="button" data-close>取消</button>
+        <button id="add-rule-text-create-btn" class="btn btn-primary" type="button">创建规则</button>
     </div>
-</div>
+</dialog>
 
-
-<div id="addRuleFromTextModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalRuleTextLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-                </button>
-                <h4 class="modal-title" id="modalRuleTextLabel">New rule</h4>
-            </div>
-            <div class="modal-body">
-                <div class="rule-alert-container"></div>
-                <textarea class="form-control" rows="10"></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">创建规则</button>
-            </div>
-        </div>
+<dialog id="import-rules-dialog" class="dlg">
+    <h3>导入规则</h3>
+    <div id="import-rules-error" class="alert alert-danger" hidden></div>
+    <label class="field-label" for="import-rules-file-input">从文件加载：</label>
+    <input id="import-rules-file-input" class="input input-file" type="file" accept="text/plain,application/json,.json,.txt">
+    <label class="field-label" for="import-rules-textarea">或粘贴 JSON 数组：</label>
+    <textarea id="import-rules-textarea" class="input" rows="12" spellcheck="false"
+              placeholder='[{"description": "…", "pattern": "文件夹/"}, …]'></textarea>
+    <label class="checkbox-label">
+        <input type="checkbox" id="import-rules-replace-existing-ckbx"> 替换现有规则（慎用）
+    </label>
+    <div class="dlg-footer">
+        <button class="btn" type="button" data-close>取消</button>
+        <button id="import-rules-submit-btn" class="btn btn-primary" type="button">导入</button>
     </div>
-</div>
+</dialog>
 
-<div id="importRulesFromTextModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importRulesModalTextLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-                </button>
-                <h4 class="modal-title" id="importRulesModalTextLabel">导入规则</h4>
-            </div>
-            <div class="modal-body">
-                <div class="rule-alert-container"></div>
-
-                <div class="form-group">
-                    <label for="importRulesFromTextModalFileInput">从文件加载：</label>
-                    <input id="importRulesFromTextModalFileInput" type="file" accept="text/plain,application/json,.json,.txt" />
-                </div>
-                <textarea class="form-control" rows="15"></textarea>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" id="import-rules-replace-existing-ckbx"> 替换现有规则（慎用）
-                    </label>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">导入</button>
-            </div>
-        </div>
+<dialog id="cloud-preview-dialog" class="dlg dlg-wide">
+    <h3 id="cloud-preview-title">云端规则预览</h3>
+    <p class="muted">检查无误后选择应用方式（应用后保存到本地下载规则）。</p>
+    <div id="cloud-preview-list" class="cloud-preview-list"></div>
+    <div class="dlg-footer dlg-footer-3">
+        <button id="cloud-preview-cancel-btn" class="btn" type="button">取消</button>
+        <button id="cloud-preview-merge-btn" class="btn" type="button">合并到现有</button>
+        <button id="cloud-preview-replace-btn" class="btn btn-danger" type="button">替换现有</button>
     </div>
-</div>
+</dialog>
 
+<div id="toast" class="toast" hidden></div>
 
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="options.js" type="module"></script>
-
-<script type="text/html" id="error-alert-template">
-    <div class="alert alert-danger">
-        <span id="alert-text"></span>
-        <button type="button" class="close" data-dismiss="alert">
-            <span aria-hidden="true">&times;</span>
-            <span class="sr-only">Close</span>
-        </button>
-    </div>
-</script>
-
-<script type="text/html" id="rule-template">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-sm-9">
-                    <div class="row title-container"></div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="btn-toolbar pull-right">
-                        <div class="btn-group btn-group-xs">
-                            <button class="btn btn-default share" title="分享"><span class="glyphicon glyphicon-share"></span></button>
-                        </div>
-                        <div class="btn-group btn-group-xs">
-                            <button class="btn btn-default up" title="上移"><span class="glyphicon glyphicon-chevron-up"></span>
-                            </button>
-                            <button class="btn btn-default down" title="下移"><span class="glyphicon glyphicon-chevron-down"></span>
-                            </button>
-                        </div>
-                        <div class="btn-group btn-group-xs">
-                            <input data-field="enabled" type="checkbox" title="启用"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="panel-collapse collapse" data-parent="#rules-container">
-            <div class="panel-body">
-                <form class="form-horizontal" role="form">
-                    <h4>描述</h4>
-                    <div class="form-group form-group-sm">
-                        <div class="col-sm-12">
-                            <input data-field="description" class="form-control" type="text"
-                                placeholder="给这条规则写个易懂的描述"/>
-                        </div>
-                    </div>
-
-                    <h4>匹配条件
-                        <small>（至少填写一个）</small>
-                    </h4>
-
-                    <div class="form-group form-group-sm">
-                        <label class="control-label col-sm-3">MIME 类型:</label>
-
-                        <div class="col-sm-9 has-feedback">
-                            <input data-field="mime" class="form-control" type="text"
-                                   placeholder="例如 image/jpeg"
-                                   data-toggle="tooltip" data-placement="right" data-container="body"
-                                   title="可用 | 表示「或」（如 image/jpeg|image/png），也可用正则通配（如 image/.*）"/>
-                        </div>
-                    </div>
-                    <div class="form-group form-group-sm">
-                        <label class="control-label col-sm-3">Tab&nbsp;URL:</label>
-
-                        <div class="col-sm-9 has-feedback">
-                            <input data-field="tabUrl" class="form-control" type="text"
-                                   placeholder="例如 .*\.instagram\.com.*"
-                                   data-toggle="tooltip" data-placement="right" data-container="body"
-                                   title="匹配当前页面 URL"/>
-                        </div>
-                    </div>
-                    <div class="form-group form-group-sm">
-                        <label class="control-label col-sm-3">下载 URL:</label>
-
-                        <div class="col-sm-9">
-                            <input data-field="url" class="form-control" type="text"
-                                   placeholder="例如 .*\.instagram\.com"/>
-                        </div>
-                    </div>
-                    <div class="form-group form-group-sm has-feedback">
-                        <label class="control-label col-sm-3"
-                               title="全部重定向后的下载地址">最终下载 URL:</label>
-
-                        <div class="col-sm-9">
-                            <input data-field="finalUrl" class="form-control" type="text"
-                                   placeholder="例如 .*\.instagram\.com"
-                                   data-toggle="tooltip" data-placement="right" data-container="body"
-                                   title="全部重定向后的下载地址"/>
-                        </div>
-                    </div>
-                    <div class="form-group form-group-sm">
-                        <label class="control-label col-sm-3">来源页 URL:</label>
-
-                        <div class="col-sm-9">
-                            <input data-field="referrer" class="form-control" type="text"
-                                   data-toggle="tooltip" data-placement="right" data-container="body"
-                                   title="大网站常把图片等文件放在 CDN 上，这种情况可用本字段代替下载 URL 来匹配"
-                                   placeholder="例如 drive\.google\.com"/>
-                        </div>
-                    </div>
-                    <div class="form-group form-group-sm">
-                        <label class="control-label col-sm-3">文件名:</label>
-
-                        <div class="col-sm-9">
-                            <input data-field="filename" class="form-control" type="text"
-                                   placeholder="例如 \.zip$"
-                                   data-toggle="tooltip" data-placement="right" data-container="body"
-                                   title="仅匹配文件名部分（如 download.zip）"/>
-                        </div>
-                    </div>
-
-                    <h4>目标路径
-                        <small>（位于默认下载文件夹内）</small>
-                    </h4>
-
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <input class="form-control" data-field="pattern" type="text"
-                                   data-toggle="tooltip" data-placement="right" data-container="body"
-                                   title="目录分隔符请用正斜杠 '/' 而不是反斜杠 '\'"
-                                   placeholder="例如 images/${referrer:1}/${filename}"/>
-                            <span class="help-block">路径以 / 结尾时，将自动在末尾追加原文件名</span>
-                        </div>
-                    </div>
-
-                    <div class="form-group form-group-sm">
-                        <label class="control-label col-sm-9">同名冲突处理:</label>
-                        <div class="col-sm-3 has-feedback">
-                            <select data-field="conflict-action" class="form-control">
-                                <!-- <option value="">Default</option> -->
-                                <option value="uniquify">自动重命名</option>
-                                <option value="overwrite">覆盖</option>
-                                <option value="prompt">逐次询问（"另存为.."）</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-danger remove" title="删除" type="button">删除规则</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</script>
 </body>
 </html>
