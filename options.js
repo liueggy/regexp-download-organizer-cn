@@ -907,23 +907,14 @@ function initToolbar() {
     });
 }
 
-/* ---------- 侧栏 Tab ---------- */
+/* ---------- 帮助对话框 ---------- */
 
-function initTabs() {
-    var tabBar = document.getElementById('side-tabs');
-    var tabs = tabBar.querySelectorAll('.tab');
-    tabs.forEach(function (tab) {
-        tab.addEventListener('click', function () {
-            tabs.forEach(function (t) {
-                t.classList.remove('active');
-            });
-            tab.classList.add('active');
-            document.querySelectorAll('.tab-panel').forEach(function (panel) {
-                var isActive = panel.id === 'tab-' + tab.dataset.tab;
-                panel.classList.toggle('active', isActive);
-                panel.hidden = !isActive;
-            });
-        });
+function initHelp() {
+    var dialog = document.getElementById('help-dialog');
+    var openBtn = document.getElementById('help-btn');
+
+    openBtn.addEventListener('click', function () {
+        openDialog(dialog);
     });
 }
 
@@ -951,7 +942,7 @@ document.querySelectorAll('.date-format-example').forEach(function (node) {
 });
 
 initDialogCloseButtons();
-initTabs();
+initHelp();
 initToolbar();
 initAddRuleFromText();
 initImportRules();
