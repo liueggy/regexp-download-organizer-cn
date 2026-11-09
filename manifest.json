@@ -1,0 +1,30 @@
+{
+"update_url": "https://clients2.google.com/service/update2/crx",
+
+  "manifest_version": 3,
+  "name": "RegExp 下载整理器（汉化版）",
+  "short_name": "REDownloadOrganizer",
+  "description": "按正则规则把下载文件自动归类到子文件夹（0.5.3 汉化版）",
+  "default_locale": "en",
+  "version": "0.5.3",
+  "options_page": "options.html",
+  "homepage_url": "https://chrome.google.com/webstore/detail/regexp-download-organizer/oamembonjndgangicfphlckkdmagpjlg",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "64": "icons/icon64.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "downloads",
+    "offscreen",
+    "storage"
+  ],
+  "optional_permissions": [
+    "tabs"
+  ],
+  "background": {
+    "service_worker": "manager.js",
+    "type": "module"
+  }
+}
