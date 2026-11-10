@@ -251,6 +251,9 @@ function buildRuleCard(rule, idx) {
         }
     });
 
+    wrapper.appendChild(label);
+    wrapper.appendChild(summary);
+
     var actions = el('div', 'rule-actions');
     var upBtn = iconButton(icons.up, '', '上移');
     var downBtn = iconButton(icons.down, '', '下移');

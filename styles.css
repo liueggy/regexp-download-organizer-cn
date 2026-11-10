@@ -1,35 +1,35 @@
-/* RegExp 下载整理器 — 选项页样式（零依赖，宣纸浅色主题） */
+/* RegExp 下载整理器 — 选项页样式（零依赖，中性极简浅色主题） */
 
 :root {
-    /* 宣纸底 / 暖纸卡 / 墨色文字 / 米灰边框 / 朱砂点缀 */
-    --bg: #f6f1e6;
-    --fg: #2f2c26;
-    --muted: #6a6457;
-    --card: #fcf8ef;
-    --card-soft: #f4eddc;
-    --border: #e5ddc9;
-    --border-strong: #d3c7ac;
-    --accent: #b0432f;
-    --accent-hover: #9a3726;
-    --accent-fg: #fcf4e4;
-    --accent-soft: #f3e3d6;
-    --danger: #8f2f1f;
-    --danger-soft: #f5e4dc;
-    --warning-bg: #f7eed6;
-    --warning-fg: #7a5a14;
-    --warning-border: #e8d9a8;
-    --danger-bg: #f8e8e0;
-    --danger-fg: #8f2f1f;
-    --shadow: 0 1px 2px rgba(94, 76, 48, 0.05), 0 2px 10px rgba(94, 76, 48, 0.06);
+    /* 中性底 / 纯卡 / 墨黑文字 / 灰边框 / 单一黑色强调（极简） */
+    --bg: #fafafa;
+    --fg: #18181b;
+    --muted: #71717a;
+    --card: #ffffff;
+    --card-soft: #f4f4f5;
+    --border: #e4e4e7;
+    --border-strong: #d4d4d8;
+    --accent: #18181b;
+    --accent-hover: #3f3f46;
+    --accent-fg: #ffffff;
+    --accent-soft: #f4f4f5;
+    --danger: #dc2626;
+    --danger-soft: #fee2e2;
+    --warning-bg: #fefce8;
+    --warning-fg: #854d0e;
+    --warning-border: #fde68a;
+    --danger-bg: #fef2f2;
+    --danger-fg: #b91c1c;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.03);
     --radius: 10px;
 
-    /* 字段徽标配色（低饱和矿物色系：黛蓝 / 青莲 / 官绿 / 赭石 / 胭脂 / 群青） */
-    --badge-mime: #35607a;
-    --badge-taburl: #6b4f8a;
-    --badge-referrer: #3d6a55;
-    --badge-url: #9a5a2c;
-    --badge-finalurl: #96455f;
-    --badge-filename: #4e5a86;
+    /* 字段徽标：统一单色（极简），off 态再降灰 */
+    --badge-mime: #a1a1aa;
+    --badge-taburl: #a1a1aa;
+    --badge-referrer: #a1a1aa;
+    --badge-url: #a1a1aa;
+    --badge-finalurl: #a1a1aa;
+    --badge-filename: #a1a1aa;
 }
 
 * {
@@ -43,8 +43,6 @@ html {
 body {
     margin: 0;
     background-color: var(--bg);
-    /* 极淡的纸质纹理（inline SVG fractalNoise，透明度 4%，无远程资源） */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.24 0 0 0 0 0.20 0 0 0 0 0.14 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23p)'/%3E%3C/svg%3E");
     color: var(--fg);
     font-family: "-apple-system", "Segoe UI", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
     font-size: 14px;
@@ -98,36 +96,17 @@ code {
     border-radius: 10px;
     background: var(--accent);
     color: var(--accent-fg);
-    box-shadow: inset 0 0 0 2px rgba(252, 244, 228, 0.35);
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.25);
     flex: none;
 }
 
 .page-header h1 {
     margin: 0;
-    font-family: 'Noto Serif SC', 'Source Han Serif SC', '楷体', 'KaiTi', STKaiti, 'SimSun', serif;
-    font-size: 24px;
+    font-family: inherit;
+    font-size: 22px;
     font-weight: 600;
     line-height: 1.3;
-    letter-spacing: 0.08em;
-}
-
-/* 方形朱红小印章，缀于标题之后（纯 CSS） */
-.page-header h1::after {
-    content: "规";
-    display: inline-block;
-    margin-left: 12px;
-    width: 25px;
-    height: 25px;
-    line-height: 25px;
-    text-align: center;
-    vertical-align: 3px;
-    font-size: 14px;
-    letter-spacing: 0;
-    font-family: '楷体', 'KaiTi', STKaiti, 'Noto Serif SC', serif;
-    background: var(--accent);
-    color: var(--accent-fg);
-    border-radius: 4px;
-    box-shadow: inset 0 0 0 1.5px rgba(252, 244, 228, 0.55);
+    letter-spacing: normal;
 }
 
 .page-header p {
@@ -187,7 +166,7 @@ code {
 }
 
 .menu-anchor .btn-caret {
-    border-left: 1px solid rgba(252, 244, 228, 0.4);
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
     padding-left: 7px;
     padding-right: 7px;
 }
@@ -516,7 +495,7 @@ textarea.input {
     height: 15px;
     border-radius: 50%;
     background: var(--card);
-    box-shadow: 0 1px 3px rgba(94, 76, 48, 0.3);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     transition: transform 0.15s ease;
 }
 
@@ -586,7 +565,7 @@ textarea.input {
     line-height: 1.5;
     border-radius: 5px;
     padding: 1px 4px;
-    color: var(--accent-fg);
+    color: #27272a;
     cursor: default;
 }
 
